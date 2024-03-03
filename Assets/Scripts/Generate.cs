@@ -4,13 +4,20 @@ using UnityEngine;
 
 public class Generate : MonoBehaviour
 {
+    public static Generate gen;
     public GameObject piece;
     public int width, height, bombsNumber;
 
     public GameObject[][] map;
     public bool bomb;
+    
 
-     void Start()
+
+    private void Awake()
+    {
+        gen = this; //Hacemos que sea singleton
+    }
+    void Start()
     {
 
         map = new GameObject[width][]; //inicializamos el array
@@ -30,6 +37,8 @@ public class Generate : MonoBehaviour
             for(int j = 0; j < height; j++)
             {
                 map[i][j]=Instantiate(piece,new Vector2(i,j),Quaternion.identity);
+                map[i][j].GetComponent<Piece>().x = i;
+                map[i][j].GetComponent<Piece>().y = j;
             }
         }
         SetBombs();
@@ -57,5 +66,28 @@ public class Generate : MonoBehaviour
                 i--; //Si nos hemos topado con una bomba, tendremos que buscar otra, este bucle no es un representativo
             }
         }
+    }//SetBombs
+
+    public int GetBombsAround(int x, int y)
+    {
+        int cont = 0;
+        if (x > 0 && y < height - 1 && map[x - 1][y + 1].GetComponent<Piece>().bomb)
+            cont++;
+        if (y < height -1 && map[x][y + 1].GetComponent<Piece>().bomb) 
+            cont++;
+        if (x < width -1 && y < height - 1 && map[x + 1][y + 1].GetComponent <Piece>().bomb)
+            cont++;
+        if(x > 0 && map[x - 1][y].GetComponent<Piece>().bomb)
+            cont++;
+        if(x < width - 1 && map[x + 1][y].GetComponent<Piece>().bomb)
+            cont++;
+        if (x > 0 && y > 0 && map[x - 1][y - 1].GetComponent<Piece>().bomb)
+            cont++;
+        if(y > 0 && map[x][y - 1].GetComponent<Piece>().bomb)
+            cont++;
+        if (x < width - 1 && y > 0 && map[x + 1][y - 1].GetComponent<Piece>().bomb)
+            cont++;
+
+        return cont;
     }
 }

@@ -4,23 +4,26 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class Piece : MonoBehaviour
+
+public class Block : MonoBehaviour
 {
     public bool bomb;
-    
-    public int x, y;
 
-    private void Start()
-    {
-        
-    }
+    public int x;
+
+    public int y;
+
 
     private void OnMouseDown()
     {
         if (bomb)
+        {
             GetComponent<SpriteRenderer>().material.color = Color.red;
+        }
         else
-            transform.GetChild(0).GetChild(0).GetComponent<Text>().text =
-                Generate.gen.GetBombsAround(x,y).ToString();  
+        {
+            transform.GetChild(0).GetChild(0).GetComponent<Text>().text = BlockGenerator.blockGen.MinesAround(x, y).ToString();
+        }
     }
+
 }
